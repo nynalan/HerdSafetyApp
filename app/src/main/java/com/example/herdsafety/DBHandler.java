@@ -1,8 +1,11 @@
 package com.example.herdsafety;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.sql.Blob;
 
 
 public class DBHandler extends SQLiteOpenHelper {
@@ -22,7 +25,8 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String AL_ID_COL = "id";
     private static final String AL_TITLE_COL = "title";
     private static final String DESCRIPTION_COL = "description";
-    private static final String LOCATION_COL = "location";
+    private static final String LATITUDE_COL = "latitude";
+    private static final String LONGITUDE_COL = "longitude";
     private static final String REPORTEDBY_COL = "reportedby";
     private static final String VERIFICATIONS_COL = "verifications";
     private static final String RADIUS_COL = "radius";
@@ -50,7 +54,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 + AL_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + AL_TITLE_COL + " TEXT,"
                 + DESCRIPTION_COL + " TEXT,"
-                + LOCATION_COL + " BLOB,"
+                + LATITUDE_COL + " FLOAT,"
+                + LONGITUDE_COL + " FLOAT,"
                 + REPORTEDBY_COL + " INTEGER,"
                 + VERIFICATIONS_COL + " INTEGER,"
                 + RADIUS_COL + " REAL,"
@@ -64,11 +69,56 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     // Adding new user to SQLite database.
+    public void AddNewUser(String username, String email, String password) {
+        // Create variable for DB, calling writable method to write new data.
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Create variable for data.
+        ContentValues values = new ContentValues();
+
+        // Pass all key-value pairs to variable.
+        values.put(US_NAME_COL, username);
+        values.put(EMAIL_COL, email);
+        values.put(PW_COL, password);
+
+        // Pass variable to DB.
+        db.insert(USERS_NAME, null, values);
+
+        // Close database.
+        db.close();
+    }
 
     // Adding new alert to SQLite database.
+    public void AddNewAlert(String alertName, String description, Float latitude, Float longitude, Integer reportedBy, Integer verifications, Float radius, String alertType, String notificationRadius, String lastUpdated) {
+        // Create variable for DB, calling writable method to write new data.
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Create variable for data.
+        ContentValues values = new ContentValues();
+
+        // Pass all key-value pairs to variable.
+        values.put(AL_TITLE_COL, alertName);
+        values.put(DESCRIPTION_COL, description);
+        values.put(LATITUDE_COL, latitude);
+        values.put(LONGITUDE_COL, longitude);
+        values.put(REPORTEDBY_COL, reportedBy);
+        values.put(VERIFICATIONS_COL, verifications);
+        values.put(RADIUS_COL, radius);
+        values.put(TYPE_COL, alertType);
+        values.put(NOTIFICATIONRADIUS_COL, notificationRadius);
+        values.put(LASTUPDATED_COL, lastUpdated);
+
+        // Pass variable to DB.
+        db.insert(USERS_NAME, null, values);
+
+        // Close database.
+        db.close();
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + USERS_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ALERTS_NAME);
         onCreate(db);
     }
+}

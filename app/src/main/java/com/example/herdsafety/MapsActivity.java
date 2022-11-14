@@ -4,6 +4,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,6 +23,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
 
+    // TODO: Declare variables for EditText widgets (for user input).
+    // Ex: private EditText courseNameEdt;
+    //     private Button addCourseBtn;
+
+    // Creating variable for DBHandler.
+    private DBHandler dbHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +40,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Declaring database connection.
+        // TODO: Declare variables for alert data (from user input).
+        // Ex: courseNameEdt = findViewById(R.id.idEdtCoursename);
 
+        // Declaring database connection.
+        dbHandler = new DBHandler(MapsActivity.this);
 
         // Remove default title text
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
@@ -45,6 +56,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
+
+        // TODO: Add on-click listener for add alert button.
+        // Ex: String courseName = courseNameEdt.getText().toString();
     }
 
     /**
