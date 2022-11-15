@@ -10,6 +10,7 @@ import android.widget.Button;
 public class AlertFormPage extends AppCompatActivity {
 
     private Button buttonCancel;
+    private Button buttonSubmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +20,25 @@ public class AlertFormPage extends AppCompatActivity {
         buttonCancel = (Button) findViewById(R.id.buttonCancel);
         buttonCancel.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                openAlertForm();
+                openAlertFormMapsActivityPage();
+            }
+        });
+
+        buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
+        buttonSubmit.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                openAlertFormReportConfirmationPage();
             }
         });
     }
 
-    public void openAlertForm(){
+    public void openAlertFormMapsActivityPage(){
         Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+    }
+
+    public void openAlertFormReportConfirmationPage(){
+        Intent intent = new Intent(this, ReportConfirmationPage.class);
         startActivity(intent);
     }
 }

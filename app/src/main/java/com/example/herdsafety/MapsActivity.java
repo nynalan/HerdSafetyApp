@@ -22,7 +22,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
-    private Button button;
+    private Button buttonReport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +44,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener(){
+        buttonReport = (Button) findViewById(R.id.buttonReport);
+        buttonReport.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                openAlertForm();
+                openAlertFormAlertPage();
             }
         });
     }
@@ -100,7 +100,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
     }
 
-    public void openAlertForm(){
+    public void openAlertFormAlertPage(){
         Intent intent = new Intent(this, AlertFormPage.class);
         startActivity(intent);
     }
