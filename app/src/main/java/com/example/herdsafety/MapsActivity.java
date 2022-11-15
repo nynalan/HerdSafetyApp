@@ -3,8 +3,10 @@ package com.example.herdsafety;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,6 +24,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    private Button buttonReport;
 
     // TODO: Declare variables for EditText widgets (for user input).
     // Ex: private EditText courseNameEdt;
@@ -57,8 +60,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
+
         // TODO: Add on-click listener for add alert button.
         // Ex: String courseName = courseNameEdt.getText().toString();
+
+        buttonReport = (Button) findViewById(R.id.buttonReport);
+        buttonReport.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                openAlertFormAlertPage();
+            }
+        });
+        
     }
 
     /**
@@ -108,4 +120,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
         mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
     }
+
+    public void openAlertFormAlertPage(){
+        Intent intent = new Intent(this, AlertFormPage.class);
+        startActivity(intent);
+    }
+
 }
