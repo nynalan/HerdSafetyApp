@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.herdsafety.AppObjects.AAlert;
 import com.example.herdsafety.AppObjects.AlertFactory;
+import com.example.herdsafety.AppObjects.CautionAlert;
 
 public class AlertFormPage extends AppCompatActivity {
 
@@ -23,6 +26,9 @@ public class AlertFormPage extends AppCompatActivity {
 
         // Declaring variable for EditText widget (description input).
         EditText alertDescriptionWidget = findViewById(R.id.editTextTextMultiLine);
+
+        // Declaring variable for EditText widget (description input).
+        RadioGroup alertTypeWidget = findViewById(R.id.radioGroup_alertLevel);
 
         // Declaring DBHandler instance and passing context to it.
         DBHandler dbHandler = new DBHandler(AlertFormPage.this);
@@ -39,6 +45,8 @@ public class AlertFormPage extends AppCompatActivity {
             public void onClick(View v){
                 // Pulling user input for alert description.
                 String alertDescription = alertDescriptionWidget.getText().toString();
+                Button alertLevelButton = (Button) findViewById(alertTypeWidget.getCheckedRadioButtonId());
+
 
 
 
@@ -47,13 +55,19 @@ public class AlertFormPage extends AppCompatActivity {
                     Toast.makeText(AlertFormPage.this, "Please provide an alert description.", Toast.LENGTH_SHORT).show();
                 }
 
+                // Ensuring a valid type is chosen.
+                else if ((alertLevelButton == null)) {
+                    Toast.makeText(AlertFormPage.this, "Please select an alert type.", Toast.LENGTH_SHORT).show();
+                }
+
                 // If valid...
                 else {
                     try {
                         // Construct new AlertModel, set class variables, insert into SQLite DB.
                         // TODO: fix location reporting
-                        AAlert new_alert = AlertFactory.singletonFactory.createAlert(alertDescription, null, null);
-                        boolean success = dbHandler.addNewAlert(new_alert);
+                        String alertLevel = alertLevelButton.getText().toString();
+                        AAlert newAlert = AlertFactory.singletonFactory.createAlert(alertDescription, null, alertLevel);
+                        boolean success = dbHandler.addNewAlert(newAlert);
 
                         // Test pop-up to verify insertion works correctly.
                         Toast.makeText(AlertFormPage.this, "Successfully added? " + success, Toast.LENGTH_SHORT).show();
