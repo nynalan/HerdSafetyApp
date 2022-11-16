@@ -18,11 +18,20 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.herdsafety.databinding.ActivityMapsBinding;
 
+import java.util.Objects;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private Button buttonReport;
+
+    // TODO: Declare variables for EditText widgets (for user input).
+    // Ex: private EditText courseNameEdt;
+    //     private Button addCourseBtn;
+
+    // Creating variable for DBHandler.
+    private DBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +43,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // TODO: Declare variables for alert data (from user input).
+        // Ex: courseNameEdt = findViewById(R.id.idEdtCoursename);
+
+        // Declaring database connection.
+        dbHandler = new DBHandler(MapsActivity.this);
+
         // Remove default title text
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         // Get access to the custom title view
         TextView mTitle = toolbar.findViewById(R.id.toolbar_title);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
+
+
+        // TODO: Add on-click listener for add alert button.
+        // Ex: String courseName = courseNameEdt.getText().toString();
 
         buttonReport = (Button) findViewById(R.id.buttonReport);
         buttonReport.setOnClickListener(new View.OnClickListener(){
@@ -50,6 +70,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 openAlertFormAlertPage();
             }
         });
+
     }
 
     /**
