@@ -18,12 +18,12 @@ public class ReportConfirmationPage extends AppCompatActivity {
         buttonDone = (Button) findViewById(R.id.buttonDone);
         buttonDone.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                openAlertFormMapsActivityPage();
+                gotoMainPage();
             }
         });
     }
 
-    public void openAlertFormMapsActivityPage(){
+    public void gotoMainPage(){
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }

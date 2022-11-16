@@ -3,11 +3,13 @@ package com.example.herdsafety;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.herdsafety.AppObjects.AAlert;
+import com.example.herdsafety.AppObjects.AlertFactory;
 
 public class AlertFormPage extends AppCompatActivity {
 
@@ -28,7 +30,7 @@ public class AlertFormPage extends AppCompatActivity {
         buttonCancel = (Button) findViewById(R.id.buttonCancel);
         buttonCancel.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                openAlertFormMapsActivityPage();
+                gotoMainPage();
             }
         });
 
@@ -37,6 +39,8 @@ public class AlertFormPage extends AppCompatActivity {
             public void onClick(View v){
                 // Pulling user input for alert description.
                 String alertDescription = alertDescriptionWidget.getText().toString();
+
+
 
                 // Ensuring a valid description is entered.
                 if (((alertDescription.equals("")) || alertDescription.equals("      Enter your alert description here"))) {
@@ -47,15 +51,15 @@ public class AlertFormPage extends AppCompatActivity {
                 else {
                     try {
                         // Construct new AlertModel, set class variables, insert into SQLite DB.
-                        AlertModel new_alert = new AlertModel();
-                        new_alert.setDescription(alertDescription);
+                        // TODO: fix location reporting
+                        AAlert new_alert = AlertFactory.singletonFactory.createAlert(alertDescription, null, null);
                         boolean success = dbHandler.addNewAlert(new_alert);
 
                         // Test pop-up to verify insertion works correctly.
                         Toast.makeText(AlertFormPage.this, "Successfully added? " + success, Toast.LENGTH_SHORT).show();
 
                         // Proceeding if all works correctly.
-                        openAlertFormReportConfirmationPage();
+                        gotoConfirmationPage();
                     }
                     catch (Exception e) {
                         // Display error message if not working correctly.
@@ -66,12 +70,12 @@ public class AlertFormPage extends AppCompatActivity {
         });
     }
 
-    public void openAlertFormMapsActivityPage(){
+    public void gotoMainPage(){
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 
-    public void openAlertFormReportConfirmationPage(){
+    public void gotoConfirmationPage(){
         Intent intent = new Intent(this, ReportConfirmationPage.class);
         startActivity(intent);
     }

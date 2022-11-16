@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.sql.Blob;
+import com.example.herdsafety.AppObjects.AAlert;
 
 
 public class DBHandler extends SQLiteOpenHelper {
@@ -92,7 +90,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public boolean addNewAlert(AlertModel alert) {
+    public boolean addNewAlert(AAlert alert) {
         // Create variable for DB, calling writable method to write new data.
         SQLiteDatabase db = this.getWritableDatabase();
 

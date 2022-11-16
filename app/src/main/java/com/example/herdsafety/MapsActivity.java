@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.herdsafety.AppObjects.AAlert;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.herdsafety.databinding.ActivityMapsBinding;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -67,10 +69,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonReport = (Button) findViewById(R.id.buttonReport);
         buttonReport.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                openAlertFormAlertPage();
+                gotoAlertFormPage();
             }
         });
 
+        // TODO: load from database when loading the main page
+        AAlert.alertList = new ArrayList<>();
     }
 
     /**
@@ -121,7 +125,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
     }
 
-    public void openAlertFormAlertPage(){
+    public void gotoAlertFormPage(){
         Intent intent = new Intent(this, AlertFormPage.class);
         startActivity(intent);
     }
