@@ -4,7 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 
 
@@ -68,8 +71,9 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL(alert_query);
     }
 
+    // WILL NEED TO REFACTOR TO INCORPORATE ALERTMODEL CLASS.
     // Adding new user to SQLite database.
-    public void AddNewUser(String username, String email, String password) {
+    public void addNewUser(String username, String email, String password) {
         // Create variable for DB, calling writable method to write new data.
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -88,8 +92,27 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public boolean addNewAlert(AlertModel alert) {
+        // Create variable for DB, calling writable method to write new data.
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Create variable for data.
+        ContentValues values = new ContentValues();
+
+        // Pass all key-value pairs to variable.
+        values.put(DESCRIPTION_COL, alert.getDescription());
+
+        Log.d("database_insert", values.toString());
+
+        // Pass variable to DB.
+        long insert = db.insert(ALERTS_NAME, null, values);
+        db.close();  // Close database.
+        return insert != -1;
+    }
+
+    // WILL NEED TO REFACTOR TO INCORPORATE ALERTMODEL CLASS.
     // Adding new alert to SQLite database.
-    public void AddNewAlert(String alertName, String description, Float latitude, Float longitude, Integer reportedBy, Integer verifications, Float radius, String alertType, String notificationRadius, String lastUpdated) {
+    public void addNewAlertInFull(String alertName, String description, Float latitude, Float longitude, Integer reportedBy, Integer verifications, Float radius, String alertType, String notificationRadius, String lastUpdated) {
         // Create variable for DB, calling writable method to write new data.
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -109,10 +132,16 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(LASTUPDATED_COL, lastUpdated);
 
         // Pass variable to DB.
-        db.insert(USERS_NAME, null, values);
+        db.insert(ALERTS_NAME, null, values);
 
         // Close database.
         db.close();
+    }
+
+    public void deleteAllAlerts() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String delete_query = "DELETE FROM Alerts;";
+        db.execSQL(delete_query);
     }
 
     @Override
@@ -121,4 +150,13 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ALERTS_NAME);
         onCreate(db);
     }
+
+
+    // public List<> outputAlertsInDB(SQLiteDatabase db) {
+        // Query to pull alerts.
+        // String alert_query = "SELECT * FROM " + ALERTS_NAME + "; ";
+
+        // Executing queries.
+        // db.execSQL(alert_query);
+    // }
 }
