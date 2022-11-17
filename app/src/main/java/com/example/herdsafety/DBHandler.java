@@ -58,9 +58,9 @@ public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
                 + LONGITUDE_COL + " FLOAT,"
                 + REPORTEDBY_COL + " INTEGER,"
                 + VERIFICATIONS_COL + " INTEGER,"
-                + RADIUS_COL + " REAL,"
+                + RADIUS_COL + " FLOAT,"
                 + TYPE_COL + " TEXT,"
-                + NOTIFICATIONRADIUS_COL + " TEXT,"
+                + NOTIFICATIONRADIUS_COL + " FLOAT,"
                 + LASTUPDATED_COL + " TEXT)";
 
         // Executing queries.
@@ -113,9 +113,9 @@ public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
     // WILL NEED TO REFACTOR TO INCORPORATE AALERT CLASS.
     // Adding new alert to SQLite database.
     @Override
-    public void addNewAlertInFull(String alertName, String description, Float latitude,
-                                  Float longitude, Integer reportedBy, Integer verifications,
-                                  Float radius, String alertType, String notificationRadius,
+    public void addNewAlertInFull(String alertName, String description, float latitude,
+                                  float longitude, int reportedBy, int verifications,
+                                  float radius, String alertType, float notificationRadius,
                                   String lastUpdated) {
         // Create variable for DB, calling writable method to write new data.
         SQLiteDatabase db = this.getWritableDatabase();
