@@ -7,11 +7,13 @@ public abstract class AAlert {
 
     private int id;
     private String description;
+    private String type;
 
     // Constructors.
-    public AAlert(int id, String description) {
+    public AAlert(int id, String description, String type) {
         this.id = id;
         this.description = description;
+        this.type = type;
     }
 
     public AAlert() {}
@@ -39,6 +41,10 @@ public abstract class AAlert {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getType() {
+        return this.type;
     }
 
     /**

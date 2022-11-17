@@ -3,7 +3,7 @@ package com.example.herdsafety.AppObjects;
 public class WarningAlert extends AAlert{
 
     public WarningAlert(int newAlertId, String description) {
-        super(newAlertId, description);
+        super(newAlertId, description, "Warning");
     }
 
     @Override

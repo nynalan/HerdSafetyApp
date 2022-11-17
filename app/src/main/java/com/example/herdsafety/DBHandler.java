@@ -99,6 +99,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         // Pass all key-value pairs to variable.
         values.put(DESCRIPTION_COL, alert.getDescription());
+        values.put(TYPE_COL, alert.getType());
 
         Log.d("database_insert", values.toString());
 
