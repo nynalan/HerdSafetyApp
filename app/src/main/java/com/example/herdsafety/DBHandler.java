@@ -5,13 +5,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import com.example.herdsafety.AppObjects.AAlert;
 
 
-public class DBHandler extends SQLiteOpenHelper {
+public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
 
-    private static final String DB_NAME = "herdsafetydb";  // Constant database variable.
+    // Constant database variables.
+    private static final String DB_NAME = "herdsafetydb";
     private static final int DB_VERSION = 1;
 
     // Declaring table name and columns.
@@ -20,7 +20,6 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String US_NAME_COL = "username";
     private static final String EMAIL_COL = "email";
     private static final String PW_COL = "password";
-
 
     private static final String ALERTS_NAME = "alerts";
     private static final String AL_ID_COL = "id";
@@ -69,8 +68,9 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL(alert_query);
     }
 
-    // WILL NEED TO REFACTOR TO INCORPORATE ALERTMODEL CLASS.
+    // WILL NEED TO REFACTOR TO INCORPORATE AALERT CLASS.
     // Adding new user to SQLite database.
+    @Override
     public void addNewUser(String username, String email, String password) {
         // Create variable for DB, calling writable method to write new data.
         SQLiteDatabase db = this.getWritableDatabase();
@@ -90,6 +90,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    @Override
     public boolean addNewAlert(AAlert alert) {
         // Create variable for DB, calling writable method to write new data.
         SQLiteDatabase db = this.getWritableDatabase();
@@ -109,9 +110,13 @@ public class DBHandler extends SQLiteOpenHelper {
         return insert != -1;
     }
 
-    // WILL NEED TO REFACTOR TO INCORPORATE ALERTMODEL CLASS.
+    // WILL NEED TO REFACTOR TO INCORPORATE AALERT CLASS.
     // Adding new alert to SQLite database.
-    public void addNewAlertInFull(String alertName, String description, Float latitude, Float longitude, Integer reportedBy, Integer verifications, Float radius, String alertType, String notificationRadius, String lastUpdated) {
+    @Override
+    public void addNewAlertInFull(String alertName, String description, Float latitude,
+                                  Float longitude, Integer reportedBy, Integer verifications,
+                                  Float radius, String alertType, String notificationRadius,
+                                  String lastUpdated) {
         // Create variable for DB, calling writable method to write new data.
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -137,6 +142,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    @Override
     public void deleteAllAlerts() {
         SQLiteDatabase db = this.getWritableDatabase();
         String delete_query = "DELETE FROM Alerts;";
@@ -149,13 +155,4 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ALERTS_NAME);
         onCreate(db);
     }
-
-
-    // public List<> outputAlertsInDB(SQLiteDatabase db) {
-        // Query to pull alerts.
-        // String alert_query = "SELECT * FROM " + ALERTS_NAME + "; ";
-
-        // Executing queries.
-        // db.execSQL(alert_query);
-    // }
 }
