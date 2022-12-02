@@ -6,8 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.herdsafety.AppObjects.AAlert;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,6 +23,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.herdsafety.databinding.ActivityMapsBinding;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -27,6 +32,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private Button buttonReport;
+    ListView aPlaceHolder;
+    String[] monthsPlaceHolder;
 
     // TODO: Declare variables for EditText widgets (for user input).
     // Ex: private EditText courseNameEdt;
@@ -75,6 +82,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // TODO: load from database when loading the main page
         AAlert.alertList = new ArrayList<>();
+
+        aPlaceHolder = findViewById(R.id.alertPlaceholder);
+        ArrayAdapter<String> adapterPlaceHolder = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getAlertStrings());
+        aPlaceHolder.setAdapter(adapterPlaceHolder);
+        aPlaceHolder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String month = adapterView.getItemAtPosition(i).toString();
+                Toast.makeText(getApplicationContext(),"Clicked: " + month, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -130,4 +148,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
+    //Gets an array of strings with alert descriptions
+    public String[] getAlertStrings(){
+        monthsPlaceHolder = new DateFormatSymbols().getMonths();
+        return monthsPlaceHolder;
+    };
+
+    public AAlert[] getAlertObjects(){
+        //TODO: Get from database
+        return new AAlert[0];
+    }
 }
