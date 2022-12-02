@@ -30,8 +30,8 @@ public class AlertFormPage extends AppCompatActivity {
         // Declaring variable for EditText widget (description input).
         RadioGroup alertTypeWidget = findViewById(R.id.radioGroup_alertLevel);
 
-        // Declaring DBHandler instance and passing context to it.
-        DBHandler dbHandler = new DBHandler(AlertFormPage.this);
+        // Declaring DBHelper instance and passing context to it.
+        DBHelper dbHelper = new DBHelper(AlertFormPage.this);
 
         buttonCancel = (Button) findViewById(R.id.buttonCancel);
         buttonCancel.setOnClickListener(new View.OnClickListener(){
@@ -67,7 +67,7 @@ public class AlertFormPage extends AppCompatActivity {
                         // TODO: fix location reporting
                         String alertLevel = alertLevelButton.getText().toString();
                         AAlert newAlert = AlertFactory.singletonFactory.createAlert(alertDescription, null, alertLevel);
-                        boolean success = dbHandler.addNewAlert(newAlert);
+                        boolean success = dbHelper.addNewAlert(newAlert);
 
                         // Test pop-up to verify insertion works correctly.
                         Toast.makeText(AlertFormPage.this, "Successfully added? " + success, Toast.LENGTH_SHORT).show();
