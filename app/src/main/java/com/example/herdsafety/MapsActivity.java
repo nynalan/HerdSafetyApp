@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -67,17 +68,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         // TODO: load from database when loading the main page
-        AAlert.alertList = new ArrayList<>();
+        AAlert.alertList = dbHandler.retrieveNearbyAlerts();
+
+        // Getting names.
+        ArrayList<String> descriptions = new ArrayList<String>();
+        for (int i = 0; i < AAlert.alertList.size(); i++) {
+            descriptions.add(AAlert.alertList.get(i).getDescription());
+        }
+        Log.d("database_insert", "Descriptions: " + descriptions);
 
         aPlaceHolder = findViewById(R.id.alertPlaceholder);
-        ArrayAdapter<String> adapterPlaceHolder = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getAlertStrings());
+        ArrayAdapter<String> adapterPlaceHolder = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, descriptions);
         aPlaceHolder.setAdapter(adapterPlaceHolder);
-        aPlaceHolder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String month = adapterView.getItemAtPosition(i).toString();
-                Toast.makeText(getApplicationContext(),"Clicked: " + month, Toast.LENGTH_SHORT).show();
-            }
+        aPlaceHolder.setOnItemClickListener((adapterView, view, i, l) -> {
+            String month = adapterView.getItemAtPosition(i).toString();
+            Toast.makeText(getApplicationContext(),"Clicked: " + month, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -138,10 +143,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public String[] getAlertStrings(){
         monthsPlaceHolder = new DateFormatSymbols().getMonths();
         return monthsPlaceHolder;
-    };
-
-    public AAlert[] getAlertObjects(){
-        //TODO: Get from database
-        return new AAlert[0];
     }
 }
