@@ -35,9 +35,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ListView aPlaceHolder;
     String[] monthsPlaceHolder;
 
-    // Creating variable for DBHandler.
-    private DBHelper dbHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +46,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
 
         // Declaring database connection.
-        dbHelper = new DBHelper(MapsActivity.this);
+        DBHandler dbHandler = new DBHandler(MapsActivity.this);
 
         // Remove default title text
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);

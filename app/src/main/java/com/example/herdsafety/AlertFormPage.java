@@ -3,6 +3,7 @@ package com.example.herdsafety;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,8 +31,8 @@ public class AlertFormPage extends AppCompatActivity {
         // Declaring variable for EditText widget (description input).
         RadioGroup alertTypeWidget = findViewById(R.id.radioGroup_alertLevel);
 
-        // Declaring DBHelper instance and passing context to it.
-        DBHelper dbHelper = new DBHelper(AlertFormPage.this);
+        // Declaring DBHandler instance and passing context to it.
+        DBHandler dbHandler = new DBHandler(AlertFormPage.this);
 
         buttonCancel = (Button) findViewById(R.id.buttonCancel);
         buttonCancel.setOnClickListener(new View.OnClickListener(){
@@ -67,7 +68,7 @@ public class AlertFormPage extends AppCompatActivity {
                         // TODO: fix location reporting
                         String alertLevel = alertLevelButton.getText().toString();
                         AAlert newAlert = AlertFactory.singletonFactory.createAlert(alertDescription, null, alertLevel);
-                        boolean success = dbHelper.addNewAlert(newAlert);
+                        boolean success = dbHandler.addNewAlert(newAlert);
 
                         // Test pop-up to verify insertion works correctly.
                         Toast.makeText(AlertFormPage.this, "Successfully added? " + success, Toast.LENGTH_SHORT).show();
@@ -77,6 +78,7 @@ public class AlertFormPage extends AppCompatActivity {
                     }
                     catch (Exception e) {
                         // Display error message if not working correctly.
+                        Log.d("database_insert", "Error: " + e);
                         Toast.makeText(AlertFormPage.this, "Oh no! An error occurred reporting the alert!", Toast.LENGTH_SHORT).show();
                     }
                 }
