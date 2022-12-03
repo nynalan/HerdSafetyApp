@@ -41,7 +41,8 @@
         android:layout_marginTop="80dp"
         android:inputType="textMultiLine"
         android:background="@drawable/dotted_border"
-        android:text="      Enter your alert description here"
+        android:text="Enter your alert description here"
+        android:textAlignment="center"
         android:textColor="@color/grey"
         android:textStyle="italic"/>
 

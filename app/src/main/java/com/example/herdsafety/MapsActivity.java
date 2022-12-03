@@ -184,7 +184,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Getting names.
         ArrayList<String> descriptions = new ArrayList<String>();
         for (int i = 0; i < AAlert.alertList.size(); i++) {
-            descriptions.add(AAlert.alertList.get(i).getDescription());
+            String fullDescription = AAlert.alertList.get(i).getDescription();
+            if(fullDescription.length() > 30){
+                descriptions.add(fullDescription.substring(0, 30) + "...");
+            }
+            else {
+                descriptions.add(fullDescription);
+            }
         }
         Log.d("database_insert", "Descriptions: " + descriptions);
 
