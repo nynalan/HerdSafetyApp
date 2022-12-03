@@ -2,10 +2,17 @@ package com.example.herdsafety;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import com.example.herdsafety.AppObjects.AAlert;
+import com.example.herdsafety.AppObjects.CautionAlert;
+import com.example.herdsafety.AppObjects.CrimeAlert;
+import com.example.herdsafety.AppObjects.WarningAlert;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
@@ -102,7 +109,7 @@ public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
         values.put(DESCRIPTION_COL, alert.getDescription());
         values.put(TYPE_COL, alert.getType());
 
-        Log.d("database_insert", values.toString());
+        // Log.d("database_insert", values.toString());
 
         // Pass variable to DB.
         long insert = db.insert(ALERTS_NAME, null, values);
@@ -148,6 +155,40 @@ public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
         String delete_query = "DELETE FROM Alerts;";
         db.execSQL(delete_query);
     }
+
+
+    @Override
+    public ArrayList<AAlert> retrieveNearbyAlerts() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Creating cursor and ArrayList to store retrieved data.
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ALERTS_NAME, null);
+        ArrayList<AAlert> alerts = new ArrayList<>();
+
+        // Moving cursor to first position.
+        if (cursor.moveToFirst()) {
+            do {
+                // Get alert type.
+                String type = cursor.getString(8);
+
+                if (Objects.equals(type, "Crime")) {
+                    alerts.add(new CrimeAlert(Integer.parseInt(cursor.getString(0)), cursor.getString(2)));
+                }
+                else if (Objects.equals(type, "Warning")) {
+                    alerts.add(new WarningAlert(Integer.parseInt(cursor.getString(0)), cursor.getString(2)));
+                }
+                else {
+                    alerts.add(new CautionAlert(Integer.parseInt(cursor.getString(0)), cursor.getString(2)));
+                }
+            } while (cursor.moveToNext());  // Moving to next.
+        }
+
+        // Closing cursor, returning ArrayList.
+        cursor.close();
+        db.close();
+        return alerts;
+    }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

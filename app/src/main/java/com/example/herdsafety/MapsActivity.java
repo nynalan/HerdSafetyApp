@@ -1,10 +1,12 @@
 package com.example.herdsafety;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +27,9 @@ import com.example.herdsafety.databinding.ActivityMapsBinding;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -33,17 +38,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ActivityMapsBinding binding;
     private Button buttonReport;
     ListView aPlaceHolder;
-    String[] monthsPlaceHolder;
-
-    // TODO: Declare variables for EditText widgets (for user input).
-    // Ex: private EditText courseNameEdt;
-    //     private Button addCourseBtn;
-
-    // Creating variable for DBHandler.
-    private DBHandler dbHandler;
+    // Declaring database connection.
+    DBHandler dbHandler;
+    static boolean severityOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
@@ -52,10 +53,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // TODO: Declare variables for alert data (from user input).
-        // Ex: courseNameEdt = findViewById(R.id.idEdtCoursename);
+        // Initialize severity switch and setOnClick
+        SwitchCompat severitySwitch = findViewById(R.id.orderLayout);
+        severitySwitch.setChecked(severityOn);
+        severitySwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAlertList(severitySwitch.isChecked());
+                severityOn = severitySwitch.isChecked();
+            }
+        });
 
-        // Declaring database connection.
         dbHandler = new DBHandler(MapsActivity.this);
 
         // Remove default title text
@@ -69,10 +77,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
-
-        // TODO: Add on-click listener for add alert button.
-        // Ex: String courseName = courseNameEdt.getText().toString();
-
         buttonReport = (Button) findViewById(R.id.buttonReport);
         buttonReport.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -80,19 +84,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        // TODO: load from database when loading the main page
-        AAlert.alertList = new ArrayList<>();
+        setAlertList(severityOn);
 
-        aPlaceHolder = findViewById(R.id.alertPlaceholder);
-        ArrayAdapter<String> adapterPlaceHolder = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, getAlertStrings());
-        aPlaceHolder.setAdapter(adapterPlaceHolder);
-        aPlaceHolder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String month = adapterView.getItemAtPosition(i).toString();
-                Toast.makeText(getApplicationContext(),"Clicked: " + month, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     /**
@@ -143,19 +136,68 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
     }
 
+    // Go to alert form page
     public void gotoAlertFormPage(){
         Intent intent = new Intent(this, AlertFormPage.class);
         startActivity(intent);
     }
 
-    //Gets an array of strings with alert descriptions
-    public String[] getAlertStrings(){
-        monthsPlaceHolder = new DateFormatSymbols().getMonths();
-        return monthsPlaceHolder;
-    };
+    // Go to alert details page with the index of the alert specified in the AAlert.alertList
+    public void gotoMoreAlertsDetailPage(int i){
+        Intent intent = new Intent(this, AlertDetailsPage.class);
+        intent.putExtra("Alert Index", i);
+        startActivity(intent);
+    }
 
-    public AAlert[] getAlertObjects(){
-        //TODO: Get from database
-        return new AAlert[0];
+    //Gets an array of strings with alert descriptions
+    public void setAlertList(boolean severityOrder){
+        AAlert.alertList = dbHandler.retrieveNearbyAlerts();
+
+        // Set severity order of alerts based on their types: 1. Crime, 2. Warning, 3. Caution
+        if(severityOrder) {
+            Collections.sort(AAlert.alertList, new Comparator<AAlert>() {
+                @Override
+                public int compare(AAlert aAlert, AAlert otherAlert) {
+                    if (aAlert.getType().equals("Crime") && (otherAlert.getType().equals("Warning") ||
+                            otherAlert.getType().equals("Caution"))) {
+                        return -1;
+                    }
+                    if (aAlert.getType().equals("Warning") && (otherAlert.getType().equals("Caution"))) {
+                        return -1;
+                    }
+                    if (aAlert.getType().equals(otherAlert.getType())) {
+                        return 0;
+                    }
+                    if (aAlert.getType().equals("Caution") && (otherAlert.getType().equals("Warning") ||
+                            otherAlert.getType().equals("Crime"))) {
+                        return 1;
+                    }
+                    if (aAlert.getType().equals("Warning") && (otherAlert.getType().equals("Crime"))) {
+                        return 1;
+                    }
+
+                    return 0;
+                }
+            });
+        }
+
+        // Getting names.
+        ArrayList<String> descriptions = new ArrayList<String>();
+        for (int i = 0; i < AAlert.alertList.size(); i++) {
+            descriptions.add(AAlert.alertList.get(i).getDescription());
+        }
+        Log.d("database_insert", "Descriptions: " + descriptions);
+
+        // If severity is not on order them based on time of entry
+        aPlaceHolder = findViewById(R.id.alertPlaceholder);
+        ArrayAdapter<String> adapterPlaceHolder = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, descriptions);
+        aPlaceHolder.setAdapter(adapterPlaceHolder);
+        aPlaceHolder.setOnItemClickListener((adapterView, view, i, l) -> {
+            String month = adapterView.getItemAtPosition(i).toString();
+            Toast.makeText(getApplicationContext(),"Clicked: " + month, Toast.LENGTH_SHORT).show();
+            gotoMoreAlertsDetailPage(i);
+        });
+
+
     }
 }
