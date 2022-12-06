@@ -53,8 +53,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button buttonReport;
     ListView aPlaceHolder;
     String[] monthsPlaceHolder;
-    FusedLocationProviderClient fusedLocationClient;
-    private Button testButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +63,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 
         // Declaring database connection.
@@ -89,17 +83,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonReport.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 gotoAlertFormPage();
-            }
-        });
-
-        testButton = (Button) findViewById(R.id.buttonTest);
-        testButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    getDeviceLocation();
-                } else {
-                    showAlertMessageLocationDisabled();
-                }
             }
         });
 
@@ -181,67 +164,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public String[] getAlertStrings(){
         monthsPlaceHolder = new DateFormatSymbols().getMonths();
         return monthsPlaceHolder;
-    }
-
-    // Get device's current location.
-    @SuppressLint("MissingPermission")
-    private void getDeviceLocation() {
-        // Log.d("Location", String.valueOf(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED));
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken()).addOnSuccessListener(this, location -> {
-                Log.d("Location", String.valueOf(location));
-                if (location != null) {
-                    updateUI(location);
-                }
-            });
-        }
-        else {
-            requestPermission();
-        }
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
-    }
-
-    private void showAlertMessageLocationDisabled() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Device location is turned off. Do you want to turn location on?");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 10) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getDeviceLocation();
-            }
-        } else {
-            // Permission denied.
-            Toast.makeText(MapsActivity.this, "Location required. Please enable from Settings.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void updateUI(Location location) {
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        Log.d("Location", "Latitude: " + latitude);
-        Log.d("Location", "Longitude: " + longitude);
     }
 }

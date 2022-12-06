@@ -171,14 +171,16 @@ public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
                 // Get alert type.
                 String type = cursor.getString(8);
 
-                if (Objects.equals(type, "Crime")) {
-                    alerts.add(new CrimeAlert(Integer.parseInt(cursor.getString(0)), cursor.getString(2)));
-                }
-                else if (Objects.equals(type, "Warning")) {
-                    alerts.add(new WarningAlert(Integer.parseInt(cursor.getString(0)), cursor.getString(2)));
-                }
-                else {
-                    alerts.add(new CautionAlert(Integer.parseInt(cursor.getString(0)), cursor.getString(2)));
+                if (cursor.getString(3) != null && cursor.getString(4) != null) {
+                    if (Objects.equals(type, "Crime")) {
+                        alerts.add(new CrimeAlert(Integer.parseInt(cursor.getString(0)), cursor.getString(2), Float.parseFloat(cursor.getString(3)), Float.parseFloat(cursor.getString(4))));
+                    }
+                    else if (Objects.equals(type, "Warning")) {
+                        alerts.add(new WarningAlert(Integer.parseInt(cursor.getString(0)), cursor.getString(2), Float.parseFloat(cursor.getString(3)), Float.parseFloat(cursor.getString(4))));
+                    }
+                    else {
+                        alerts.add(new CautionAlert(Integer.parseInt(cursor.getString(0)), cursor.getString(2), Float.parseFloat(cursor.getString(3)), Float.parseFloat(cursor.getString(4))));
+                    }
                 }
             } while (cursor.moveToNext());  // Moving to next.
         }

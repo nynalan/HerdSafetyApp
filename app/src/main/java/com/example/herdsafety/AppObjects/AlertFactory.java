@@ -18,13 +18,13 @@ public class AlertFactory {
         }
 
         if (type.equals("Caution")) {
-            return new CautionAlert(newAlertId, description);
+            return new CautionAlert(newAlertId, description, (float) location.latitude, (float) location.longitude);
         }
         else if (type.equals("Warning")) {
-            return new WarningAlert(newAlertId, description);
+            return new WarningAlert(newAlertId, description, (float) location.latitude, (float) location.longitude);
         }
         else if (type.equals("Crime")) {
-            return new CrimeAlert(newAlertId, description);
+            return new CrimeAlert(newAlertId, description, (float) location.latitude, (float) location.longitude);
         }
         // create the specific type of alert necessary
         return null;
