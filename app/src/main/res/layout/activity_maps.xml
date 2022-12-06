@@ -35,9 +35,9 @@
         android:id="@+id/alertPlaceholder"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:layout_below="@id/map"
         android:layout_marginTop="35dp"
-        android:layout_centerInParent="true"
-        android:layout_below="@id/map"/>
+        android:layout_centerInParent="true" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:layout_width="wrap_content"

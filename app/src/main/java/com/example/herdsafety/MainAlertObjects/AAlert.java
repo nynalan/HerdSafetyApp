@@ -2,6 +2,8 @@ package com.example.herdsafety.MainAlertObjects;
 
 import com.example.herdsafety.Similarity.SimilarityStrategy;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public abstract class AAlert {
@@ -23,16 +25,21 @@ public abstract class AAlert {
 
 
     // Constructors.
-    public AAlert(int id, String description, String type) {
+    public AAlert(int id, String description, Float latitude, Float longitude, String type) {
         this.id = id;
         this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.type = type;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "AlertModel{" +
                 "id=" + id +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 ", description='" + description
                 + "'}";
     }

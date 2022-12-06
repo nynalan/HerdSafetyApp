@@ -1,11 +1,23 @@
 package com.example.herdsafety.AppPages;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,6 +26,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.tasks.CancellationTokenSource;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.example.herdsafety.MainAlertObjects.AAlert;
 import com.example.herdsafety.Database.DBHandler;
 import com.example.herdsafety.MainAlertObjects.AAlert;
 import com.example.herdsafety.R;
@@ -25,7 +45,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-
+import com.example.herdsafety.databinding.ActivityMapsBinding;
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,10 +54,15 @@ import java.util.Objects;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private Button buttonReport;
     ListView aPlaceHolder;
+    String[] monthsPlaceHolder;
+    public ArrayList<LatLng> coordinates = new ArrayList<>();
+    public ArrayList<String> descriptions = new ArrayList<>();
+
     // Declaring database connection.
     DBHandler dbHandler;
     static boolean severityOn = false;
@@ -65,6 +91,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         dbHandler = new DBHandler(MapsActivity.this);
 
+        // dbHandler.deleteAllAlerts();
+
         // Remove default title text
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         // Get access to the custom title view
@@ -83,8 +111,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        setAlertList(severityOn);
+        AAlert.alertList = dbHandler.retrieveNearbyAlerts();
 
+        // Getting location data for markers on map display.
+        for (int i = 0; i < AAlert.alertList.size(); i++) {
+            Log.d("location", String.valueOf(AAlert.alertList.get(i).getLatitude()));
+            coordinates.add(new LatLng(AAlert.alertList.get(i).getLatitude(), AAlert.alertList.get(i).getLongitude()));
+        }
+        // Log.d("marker", "Locations: " + coordinates);
+
+        // Getting names.
+        for (int i = 0; i < AAlert.alertList.size(); i++) {
+            descriptions.add(AAlert.alertList.get(i).getDescription());
+        }
+
+        aPlaceHolder = findViewById(R.id.alertPlaceholder);
+        ArrayAdapter<String> adapterPlaceHolder = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, descriptions);
+        aPlaceHolder.setAdapter(adapterPlaceHolder);
+        aPlaceHolder.setOnItemClickListener((adapterView, view, i, l) -> {
+            String month = adapterView.getItemAtPosition(i).toString();
+            Toast.makeText(getApplicationContext(),"Clicked: " + month, Toast.LENGTH_SHORT).show();
+        });
+        setAlertList(severityOn);
     }
 
     /**
@@ -97,22 +145,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+
         mMap = googleMap;
 
         LatLng cuBoulder = new LatLng(40.00894024526554, -105.2679755325988);
         mMap.addMarker(new MarkerOptions().position(cuBoulder).title("CU Boulder"));
 
-        //get latlong for corners for specified city
+        // Creating marker for each set of coordinates.
+        Log.d("location_test", "Coordinates: " + coordinates);
+        for (int i = 0; i < coordinates.size(); i++) {
+            LatLng coords = new LatLng(coordinates.get(i).latitude, coordinates.get(i).longitude);
+            MarkerOptions marker = new MarkerOptions().position(coords).title(descriptions.get(i));
+            Log.d("location_test", "Coords returned: " + coords);
+            Log.d("location_test", "Marker created: " + marker);
+            mMap.addMarker(new MarkerOptions().position(coords).title(descriptions.get(i)));
+        }
 
-        double border = 0.005;
+        // Test alert!
+        LatLng test = new LatLng(40.012197, -105.263686);
+        mMap.addMarker(new MarkerOptions().position(test).title("Marker #1"));
+
+        double border = 1;
 
         LatLng one = new LatLng(cuBoulder.latitude - border, cuBoulder.longitude - border);
         LatLng two = new LatLng(cuBoulder.latitude + border, cuBoulder.longitude + border);
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        //add them to builder
+        // add them to builder
         builder.include(one);
         builder.include(two);
 
