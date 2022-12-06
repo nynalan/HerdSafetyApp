@@ -1,10 +1,8 @@
-package com.example.herdsafety;
+package com.example.herdsafety.Similarity;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CautionSimilarity extends SimilarityStrategy {
 

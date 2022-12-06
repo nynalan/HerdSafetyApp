@@ -1,4 +1,4 @@
-package com.example.herdsafety;
+package com.example.herdsafety.Similarity;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

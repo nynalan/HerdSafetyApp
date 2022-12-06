@@ -4,46 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AppPages.AlertDetailsPage">
+    tools:context=".AppPages.AlertVerifyPage">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
     <Button
-        android:id="@+id/buttonDone"
+        android:id="@+id/buttonSubmitNew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="22dp"
+        android:backgroundTint="@color/grey"
+        android:text="Submit New" />
+
+    <Button
+        android:id="@+id/buttonVerifyOld"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="158dp"
-        android:layout_marginBottom="19dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginBottom="22dp"
         android:backgroundTint="@color/orange"
-        android:text="Done" />
+        android:text="Verify Old" />
 
     <TextView
         android:id="@+id/editTextTextMultiLine"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="299dp"
         android:layout_height="186dp"
-        android:layout_below="@id/textViewAlert"
+        android:layout_below="@id/textViewAlertVerify"
         android:layout_centerInParent="true"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="81dp"
         android:background="@drawable/dotted_border"
+        android:textAlignment="center"
         android:textColor="@color/grey"
         android:textSize="18sp"
-        android:textAlignment="center"
         android:textStyle="italic" />
 
     <TextView
-        android:id="@+id/textViewAlert"
+        android:id="@+id/textViewAlertVerify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
         android:layout_centerInParent="true"
         android:layout_marginTop="20dp"
-        android:text="Alert"
+        android:text="Alert Verify"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -51,7 +61,7 @@
         android:id="@+id/textViewDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textViewAlert"
+        android:layout_below="@id/textViewAlertVerify"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="24dp"
@@ -104,6 +114,19 @@
             android:layout_weight="12"
             android:text="Caution" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/textViewVerifyDecision"
+        android:layout_width="370dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/radioGroup_alertLevel"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="36dp"
+        android:text="We have detected a similar Alert in our system. Would you like to verify our already existing report or submit a new one?"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

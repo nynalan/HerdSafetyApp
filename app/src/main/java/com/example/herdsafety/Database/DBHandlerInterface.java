@@ -1,7 +1,7 @@
-package com.example.herdsafety;
+package com.example.herdsafety.Database;
 
 import android.database.sqlite.SQLiteDatabase;
-import com.example.herdsafety.AppObjects.AAlert;
+import com.example.herdsafety.MainAlertObjects.AAlert;
 
 import java.util.ArrayList;
 

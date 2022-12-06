@@ -15,21 +15,28 @@
         android:theme="@style/Theme.HerdSafety"
         tools:targetApi="31">
         <activity
-            android:name=".AlertDetailsPage"
+            android:name=".AppPages.AlertVerifyPage"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ReportConfirmationPage"
+            android:name=".AppPages.AlertDetailsPage"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".AlertFormPage"
+            android:name=".AppPages.ReportConfirmationPage"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".AppPages.AlertFormPage"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -51,7 +58,7 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".AppPages.MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps">
             <intent-filter>

@@ -1,10 +1,14 @@
-package com.example.herdsafety.AppObjects;
+package com.example.herdsafety.MainAlertObjects;
+
+import com.example.herdsafety.Similarity.SimilarityStrategy;
 
 import java.util.List;
 
 public abstract class AAlert {
     public static List<AAlert> alertList;
 
+    public SimilarityStrategy sim_algorithm;
+    
     private int id;
     private String title;
     private String description;
@@ -16,6 +20,7 @@ public abstract class AAlert {
     private String type;
     private float notification_radius;
     private String last_updated;
+
 
     // Constructors.
     public AAlert(int id, String description, String type) {

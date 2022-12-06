@@ -1,15 +1,15 @@
-package com.example.herdsafety;
+package com.example.herdsafety.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import com.example.herdsafety.AppObjects.AAlert;
-import com.example.herdsafety.AppObjects.CautionAlert;
-import com.example.herdsafety.AppObjects.CrimeAlert;
-import com.example.herdsafety.AppObjects.WarningAlert;
+
+import com.example.herdsafety.MainAlertObjects.AAlert;
+import com.example.herdsafety.MainAlertObjects.CautionAlert;
+import com.example.herdsafety.MainAlertObjects.CrimeAlert;
+import com.example.herdsafety.MainAlertObjects.WarningAlert;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -154,6 +154,15 @@ public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
         SQLiteDatabase db = this.getWritableDatabase();
         String delete_query = "DELETE FROM Alerts;";
         db.execSQL(delete_query);
+        db.close();
+    }
+
+
+    public void deleteOneAlert(String description) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String delete_query = "DELETE FROM Alerts WHERE description = '"+description+"';";
+        db.execSQL(delete_query);
+        db.close();
     }
 
 

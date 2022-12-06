@@ -2,8 +2,12 @@ package com.example .herdsafety;
 
 import static org.junit.Assert.assertEquals;
 
+import com.example.herdsafety.Similarity.CautionSimilarity;
+import com.example.herdsafety.Similarity.CrimeSimilarity;
+import com.example.herdsafety.Similarity.SimilarityStrategy;
+import com.example.herdsafety.Similarity.WarningSimilarity;
+
 import org.junit.Assert;
-import org.junit.ComparisonFailure;
 import org.junit.Test;
 
 import java.util.Hashtable;

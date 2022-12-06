@@ -1,8 +1,6 @@
-package com.example.herdsafety;
+package com.example.herdsafety.Similarity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
 
 public class WarningSimilarity extends SimilarityStrategy {
@@ -54,7 +52,6 @@ public class WarningSimilarity extends SimilarityStrategy {
 
 
         }
-
 
         return suspect_id;
     }

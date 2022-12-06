@@ -19,7 +19,7 @@
         android:layout_marginTop="20dp"
         android:layout_below="@id/toolbar"
         map:cardElevation="12dp"
-        tools:context=".MapsActivity" />
+        tools:context=".AppPages.MapsActivity" />
 
     <Button
         android:id="@+id/buttonReport"

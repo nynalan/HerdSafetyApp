@@ -1,21 +1,17 @@
-package com.example.herdsafety;
+package com.example.herdsafety.AppPages;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.example.herdsafety.AppObjects.AAlert;
-
-import java.util.ArrayList;
+import com.example.herdsafety.Database.DBHandler;
+import com.example.herdsafety.MainAlertObjects.AAlert;
+import com.example.herdsafety.R;
 
 public class AlertDetailsPage extends AppCompatActivity {
 

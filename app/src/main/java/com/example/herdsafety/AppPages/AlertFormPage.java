@@ -1,4 +1,4 @@
-package com.example.herdsafety;
+package com.example.herdsafety.AppPages;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -10,8 +10,13 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.herdsafety.AppObjects.AAlert;
-import com.example.herdsafety.AppObjects.AlertFactory;
+import com.example.herdsafety.Database.DBHandler;
+import com.example.herdsafety.MainAlertObjects.AAlert;
+import com.example.herdsafety.MainAlertObjects.AlertFactory;
+import com.example.herdsafety.R;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Hashtable;
 
 public class AlertFormPage extends AppCompatActivity {
 
@@ -66,13 +71,16 @@ public class AlertFormPage extends AppCompatActivity {
                         // TODO: fix location reporting
                         String alertLevel = alertLevelButton.getText().toString();
                         AAlert newAlert = AlertFactory.singletonFactory.createAlert(alertDescription, null, alertLevel);
-                        boolean success = dbHandler.addNewAlert(newAlert);
-
-                        // Test pop-up to verify insertion works correctly.
-                        Toast.makeText(AlertFormPage.this, "Successfully added? " + success, Toast.LENGTH_SHORT).show();
+                        Hashtable<Integer, String> hashtableAlert = new Hashtable<>();
+                        for(AAlert alert: AAlert.alertList){
+                            if(alert.getType().equals(newAlert.getType())) {
+                                hashtableAlert.put(alert.getId(), alert.getDescription());
+                            }
+                        }
+                        int bestMatchId = newAlert.sim_algorithm.similarPostId(newAlert.getDescription(), hashtableAlert);
 
                         // Proceeding if all works correctly.
-                        gotoConfirmationPage();
+                        gotoVerifyPage(bestMatchId, alertDescription, null, newAlert.getType());
                     }
                     catch (Exception e) {
                         // Display error message if not working correctly.
@@ -90,8 +98,12 @@ public class AlertFormPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void gotoConfirmationPage(){
-        Intent intent = new Intent(this, ReportConfirmationPage.class);
+    public void gotoVerifyPage(int id, String alertDescription, LatLng latLng, String type){
+        Intent intent = new Intent(this, AlertVerifyPage.class);
+        intent.putExtra("Alert id", id);
+        intent.putExtra("Alert Description", alertDescription);
+        //intent.putExtra("Alert LatLng", latLng);
+        intent.putExtra("Alert Type", type);
         startActivity(intent);
     }
 }

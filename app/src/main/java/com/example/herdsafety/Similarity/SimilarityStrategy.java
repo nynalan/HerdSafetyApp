@@ -1,6 +1,4 @@
-package com.example.herdsafety;
-
-import com.example.herdsafety.AppObjects.AAlert;
+package com.example.herdsafety.Similarity;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
