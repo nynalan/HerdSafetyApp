@@ -1,7 +1,8 @@
-package com.example.herdsafety;
+package com.example.herdsafety.AppPages;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -32,7 +33,11 @@ import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.example.herdsafety.AppObjects.AAlert;
+import com.example.herdsafety.MainAlertObjects.AAlert;
+import com.example.herdsafety.Database.DBHandler;
+import com.example.herdsafety.MainAlertObjects.AAlert;
+import com.example.herdsafety.R;
+import com.example.herdsafety.databinding.ActivityMapsBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -43,6 +48,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.herdsafety.databinding.ActivityMapsBinding;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -56,8 +63,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public ArrayList<LatLng> coordinates = new ArrayList<>();
     public ArrayList<String> descriptions = new ArrayList<>();
 
+    // Declaring database connection.
+    DBHandler dbHandler;
+    static boolean severityOn = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
@@ -66,8 +78,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Declaring database connection.
-        DBHandler dbHandler = new DBHandler(MapsActivity.this);
+        // Initialize severity switch and setOnClick
+        SwitchCompat severitySwitch = findViewById(R.id.orderLayout);
+        severitySwitch.setChecked(severityOn);
+        severitySwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAlertList(severitySwitch.isChecked());
+                severityOn = severitySwitch.isChecked();
+            }
+        });
+
+        dbHandler = new DBHandler(MapsActivity.this);
 
         // dbHandler.deleteAllAlerts();
 
@@ -110,6 +132,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             String month = adapterView.getItemAtPosition(i).toString();
             Toast.makeText(getApplicationContext(),"Clicked: " + month, Toast.LENGTH_SHORT).show();
         });
+        setAlertList(severityOn);
     }
 
     /**
@@ -173,14 +196,74 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
     }
 
+    // Go to alert form page
     public void gotoAlertFormPage(){
         Intent intent = new Intent(this, AlertFormPage.class);
         startActivity(intent);
     }
 
+    // Go to alert details page with the index of the alert specified in the AAlert.alertList
+    public void gotoMoreAlertsDetailPage(int i){
+        Intent intent = new Intent(this, AlertDetailsPage.class);
+        intent.putExtra("Alert Index", i);
+        startActivity(intent);
+    }
+
     //Gets an array of strings with alert descriptions
-    public String[] getAlertStrings(){
-        monthsPlaceHolder = new DateFormatSymbols().getMonths();
-        return monthsPlaceHolder;
+    public void setAlertList(boolean severityOrder){
+        AAlert.alertList = dbHandler.retrieveNearbyAlerts();
+
+        // Set severity order of alerts based on their types: 1. Crime, 2. Warning, 3. Caution
+        if(severityOrder) {
+            Collections.sort(AAlert.alertList, new Comparator<AAlert>() {
+                @Override
+                public int compare(AAlert aAlert, AAlert otherAlert) {
+                    if (aAlert.getType().equals("Crime") && (otherAlert.getType().equals("Warning") ||
+                            otherAlert.getType().equals("Caution"))) {
+                        return -1;
+                    }
+                    if (aAlert.getType().equals("Warning") && (otherAlert.getType().equals("Caution"))) {
+                        return -1;
+                    }
+                    if (aAlert.getType().equals(otherAlert.getType())) {
+                        return 0;
+                    }
+                    if (aAlert.getType().equals("Caution") && (otherAlert.getType().equals("Warning") ||
+                            otherAlert.getType().equals("Crime"))) {
+                        return 1;
+                    }
+                    if (aAlert.getType().equals("Warning") && (otherAlert.getType().equals("Crime"))) {
+                        return 1;
+                    }
+
+                    return 0;
+                }
+            });
+        }
+
+        // Getting names.
+        ArrayList<String> descriptions = new ArrayList<String>();
+        for (int i = 0; i < AAlert.alertList.size(); i++) {
+            String fullDescription = AAlert.alertList.get(i).getDescription();
+            if(fullDescription.length() > 30){
+                descriptions.add(fullDescription.substring(0, 30) + "...");
+            }
+            else {
+                descriptions.add(fullDescription);
+            }
+        }
+        Log.d("database_insert", "Descriptions: " + descriptions);
+
+        // If severity is not on order them based on time of entry
+        aPlaceHolder = findViewById(R.id.alertPlaceholder);
+        ArrayAdapter<String> adapterPlaceHolder = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, descriptions);
+        aPlaceHolder.setAdapter(adapterPlaceHolder);
+        aPlaceHolder.setOnItemClickListener((adapterView, view, i, l) -> {
+            String month = adapterView.getItemAtPosition(i).toString();
+            Toast.makeText(getApplicationContext(),"Clicked: " + month, Toast.LENGTH_SHORT).show();
+            gotoMoreAlertsDetailPage(i);
+        });
+
+
     }
 }

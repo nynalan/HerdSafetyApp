@@ -11,7 +11,6 @@
 
     <fragment
         xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="300dp"
@@ -20,7 +19,7 @@
         android:layout_marginTop="20dp"
         android:layout_below="@id/toolbar"
         map:cardElevation="12dp"
-        tools:context=".MapsActivity" />
+        tools:context=".AppPages.MapsActivity" />
 
     <Button
         android:id="@+id/buttonReport"
@@ -32,18 +31,23 @@
         android:layout_marginBottom="5dp"
         android:text="Report" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="50"
-        android:id="@+id/infotext" />
-
     <ListView
         android:id="@+id/alertPlaceholder"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_below="@id/map"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="35dp"
+        android:layout_centerInParent="true" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/map"
+        android:layout_marginRight="35dp"
+        android:id="@+id/orderLayout"
+        android:textColor="@color/grey"
+        android:text="Severity" />
+
 
 </RelativeLayout>

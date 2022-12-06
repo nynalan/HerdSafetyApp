@@ -1,11 +1,9 @@
 
-package com.example.herdsafety.AppObjects;
+package com.example.herdsafety.MainAlertObjects;
 
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-
-import java.util.List;
 
 public class AlertFactory {
 

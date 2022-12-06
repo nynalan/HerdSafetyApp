@@ -4,55 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AppPages.AlertFormPage">
+    tools:context=".AppPages.AlertDetailsPage">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
     <Button
-        android:id="@+id/buttonCancel"
+        android:id="@+id/buttonDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="100dp"
-        android:layout_marginBottom="100dp"
-        android:backgroundTint="@color/grey"
-        android:text="Cancel" />
-
-    <Button
-        android:id="@+id/buttonSubmit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="100dp"
-        android:layout_marginBottom="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="158dp"
+        android:layout_marginBottom="19dp"
         android:backgroundTint="@color/orange"
-        android:text="Submit" />
+        android:text="Done" />
 
-    <EditText
+    <TextView
         android:id="@+id/editTextTextMultiLine"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="299dp"
+        android:layout_height="186dp"
+        android:layout_below="@id/textViewAlert"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="81dp"
+        android:background="@drawable/dotted_border"
+        android:textColor="@color/grey"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/textViewAlert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
         android:layout_centerInParent="true"
-        android:layout_marginTop="80dp"
-        android:inputType="textMultiLine"
-        android:background="@drawable/dotted_border"
-        android:text="Enter your alert description here"
-        android:textAlignment="center"
-        android:textColor="@color/grey"
-        android:textStyle="italic"/>
+        android:layout_marginTop="20dp"
+        android:text="Alert"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewAlert"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="24dp"
+        android:text="Description"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextTextMultiLine"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Type"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <RadioGroup
         android:id="@+id/radioGroup_alertLevel"
         android:layout_width="293dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextTextMultiLine"
+        android:layout_below="@id/textViewType"
         android:layout_centerInParent="true"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -78,17 +104,6 @@
             android:layout_weight="12"
             android:text="Caution" />
     </RadioGroup>
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@id/toolbar"
-        android:layout_marginTop="20dp"
-        android:text="New Report"
-        android:textSize="24sp"
-        android:textStyle="bold"/>
 
 
 </RelativeLayout>
