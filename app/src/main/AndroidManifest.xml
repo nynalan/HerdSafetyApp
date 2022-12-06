@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Uses-permission statements for PostgreSQL DB connections. -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-feature android:name="android.hardware.location.gps" />
 
     <application
         android:allowBackup="true"
@@ -56,6 +59,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="MapsActivity"
+            android:foregroundServiceType="location">
+        </service>
     </application>
 
 </manifest>
