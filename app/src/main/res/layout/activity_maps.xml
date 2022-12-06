@@ -23,16 +23,6 @@
         tools:context=".MapsActivity" />
 
     <Button
-        android:id="@+id/buttonTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:backgroundTint="@color/orange"
-        android:layout_marginBottom="100dp"
-        android:text="Test" />
-
-    <Button
         android:id="@+id/buttonReport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

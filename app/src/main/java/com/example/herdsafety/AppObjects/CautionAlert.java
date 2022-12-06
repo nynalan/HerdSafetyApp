@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class CautionAlert extends AAlert {
 
     public CautionAlert(int newAlertId, String description, Float latitude, Float longitude) {
-        super(newAlertId, description, "Caution");
+        super(newAlertId, description, latitude, longitude,"Caution");
     }
 
     @Override

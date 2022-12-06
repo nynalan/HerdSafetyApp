@@ -36,7 +36,10 @@ public class AlertFormPage extends AppCompatActivity {
 
     private Button buttonCancel;
     private Button buttonSubmit;
-    private Button testButton;
+    // private Button testButton;
+
+    // Declaring LatLng to store device location (if proper permissions given).
+    // FusedLocationProviderClient to pull location data.
     private LatLng curr_location;
     FusedLocationProviderClient fusedLocationClient;
 
@@ -64,6 +67,7 @@ public class AlertFormPage extends AppCompatActivity {
             }
         });
 
+        /*
         testButton = (Button) findViewById(R.id.buttonTest);
         testButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
@@ -74,6 +78,7 @@ public class AlertFormPage extends AppCompatActivity {
                 }
             }
         });
+        */
 
         buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener(){
@@ -96,10 +101,20 @@ public class AlertFormPage extends AppCompatActivity {
                 else {
                     try {
                         // Construct new AlertModel, set class variables, insert into SQLite DB.
-                        // TODO: fix location reporting
                         String alertLevel = alertLevelButton.getText().toString();
+
+                        // Checking that location permission was given.
+                        // if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         LatLng location = getDeviceLocation();
+                        // } else {
+                            // If not, display message. Null-pointer exception in next statement will be caught.
+                            // showAlertMessageLocationDisabled();
+                        // }
+                        Log.d("location", "AlertFormPage location read: " + location);
                         AAlert newAlert = AlertFactory.singletonFactory.createAlert(alertDescription, location, alertLevel);
+                        // Log.d("location_test", "newAlert returned: " + newAlert);
+                        // Log.d("location_test", "newAlert latitude: " + newAlert.getLatitude());
+                        // Log.d("location_test", "newAlert longitude: " + newAlert.getLongitude());
                         boolean success = dbHandler.addNewAlert(newAlert);
 
                         // Test pop-up to verify insertion works correctly.
@@ -131,27 +146,27 @@ public class AlertFormPage extends AppCompatActivity {
     // Get device's current location.
     @SuppressLint("MissingPermission")
     private LatLng getDeviceLocation() {
-        // Declare location variable.
         // Log.d("Location", String.valueOf(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED));
+
+        // If permissions are given, pull current device location with cancellation token.
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
             fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken()).addOnSuccessListener(this, location -> {
                 Log.d("Location", String.valueOf(location));
-                if (location != null) {
-                    curr_location = getLocation(location);
-                }
+                if (location != null) { curr_location = getLocation(location); }
             });
         }
-        else {
-            requestPermission();
-        }
+        // Request permission if not yet given.
+        else { requestPermission(); }
         return curr_location;
     }
 
     private void requestPermission() {
+        // Requesting permission and sending request code to adjust settings.
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 10);
     }
 
+    // Pop-up message that displays when location privileges are not granted.
     private void showAlertMessageLocationDisabled() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Device location is turned off. Do you want to turn location on?");
@@ -172,10 +187,13 @@ public class AlertFormPage extends AppCompatActivity {
         dialog.show();
     }
 
+    // Handling result of permission request.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Listening for granted permissions.
         if (requestCode == 10) {
+            // Pulling device location if allowed.
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getDeviceLocation();
             }
@@ -186,10 +204,9 @@ public class AlertFormPage extends AppCompatActivity {
     }
 
     private LatLng getLocation(Location location) {
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        // Log.d("Location", "Latitude: " + latitude);
-        // Log.d("Location", "Longitude: " + longitude);
-        return new LatLng(latitude, longitude);
+        Double latitude = location.getLatitude();
+        Double longitude = location.getLongitude();
+        LatLng latlng = new LatLng(latitude, longitude);
+        return latlng;
     }
 }

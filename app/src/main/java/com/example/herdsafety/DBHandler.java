@@ -107,9 +107,11 @@ public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
 
         // Pass all key-value pairs to variable.
         values.put(DESCRIPTION_COL, alert.getDescription());
+        values.put(LATITUDE_COL, alert.getLatitude());
+        values.put(LONGITUDE_COL, alert.getLongitude());
         values.put(TYPE_COL, alert.getType());
 
-        // Log.d("database_insert", values.toString());
+        Log.d("database_insert", values.toString());
 
         // Pass variable to DB.
         long insert = db.insert(ALERTS_NAME, null, values);
@@ -154,6 +156,7 @@ public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
         SQLiteDatabase db = this.getWritableDatabase();
         String delete_query = "DELETE FROM Alerts;";
         db.execSQL(delete_query);
+        Log.d("database_insert", "All alerts deleted!");
     }
 
 
@@ -170,6 +173,9 @@ public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
             do {
                 // Get alert type.
                 String type = cursor.getString(8);
+
+                Log.d("location", "Latitude: " + cursor.getString(3));
+                Log.d("location", "Longitude: " + cursor.getString(4));
 
                 if (cursor.getString(3) != null && cursor.getString(4) != null) {
                     if (Objects.equals(type, "Crime")) {

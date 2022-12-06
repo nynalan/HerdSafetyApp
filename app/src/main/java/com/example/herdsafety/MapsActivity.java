@@ -53,6 +53,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button buttonReport;
     ListView aPlaceHolder;
     String[] monthsPlaceHolder;
+    public ArrayList<LatLng> coordinates = new ArrayList<>();
+    public ArrayList<String> descriptions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +66,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         // Declaring database connection.
         DBHandler dbHandler = new DBHandler(MapsActivity.this);
+
+        // dbHandler.deleteAllAlerts();
 
         // Remove default title text
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
@@ -88,12 +91,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         AAlert.alertList = dbHandler.retrieveNearbyAlerts();
 
+        // Getting location data for markers on map display.
+        for (int i = 0; i < AAlert.alertList.size(); i++) {
+            Log.d("location", String.valueOf(AAlert.alertList.get(i).getLatitude()));
+            coordinates.add(new LatLng(AAlert.alertList.get(i).getLatitude(), AAlert.alertList.get(i).getLongitude()));
+        }
+        // Log.d("marker", "Locations: " + coordinates);
+
         // Getting names.
-        ArrayList<String> descriptions = new ArrayList<String>();
         for (int i = 0; i < AAlert.alertList.size(); i++) {
             descriptions.add(AAlert.alertList.get(i).getDescription());
         }
-        Log.d("database_insert", "Descriptions: " + descriptions);
 
         aPlaceHolder = findViewById(R.id.alertPlaceholder);
         ArrayAdapter<String> adapterPlaceHolder = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, descriptions);
@@ -114,25 +122,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
 
         mMap = googleMap;
 
         LatLng cuBoulder = new LatLng(40.00894024526554, -105.2679755325988);
         mMap.addMarker(new MarkerOptions().position(cuBoulder).title("CU Boulder"));
 
+        // Creating marker for each set of coordinates.
+        Log.d("location_test", "Coordinates: " + coordinates);
+        for (int i = 0; i < coordinates.size(); i++) {
+            LatLng coords = new LatLng(coordinates.get(i).latitude, coordinates.get(i).longitude);
+            MarkerOptions marker = new MarkerOptions().position(coords).title(descriptions.get(i));
+            Log.d("location_test", "Coords returned: " + coords);
+            Log.d("location_test", "Marker created: " + marker);
+            mMap.addMarker(new MarkerOptions().position(coords).title(descriptions.get(i)));
+        }
+
         // Test alert!
         LatLng test = new LatLng(40.012197, -105.263686);
         mMap.addMarker(new MarkerOptions().position(test).title("Marker #1"));
 
-        double border = 0.005;
+        double border = 1;
 
         LatLng one = new LatLng(cuBoulder.latitude - border, cuBoulder.longitude - border);
         LatLng two = new LatLng(cuBoulder.latitude + border, cuBoulder.longitude + border);
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        //add them to builder
+        // add them to builder
         builder.include(one);
         builder.include(two);
 

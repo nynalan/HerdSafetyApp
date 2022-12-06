@@ -1,6 +1,8 @@
 
 package com.example.herdsafety.AppObjects;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -16,6 +18,10 @@ public class AlertFactory {
                 newAlertId = alert.getId() + 1;
             }
         }
+
+        // Log.d("location_test", "LatLng object: " + location);
+        // Log.d("location_test", "Latitude: " + location.latitude);
+        // Log.d("location_test", "Latitude: " + location.longitude);
 
         if (type.equals("Caution")) {
             return new CautionAlert(newAlertId, description, (float) location.latitude, (float) location.longitude);
