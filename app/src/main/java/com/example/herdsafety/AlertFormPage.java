@@ -7,13 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.herdsafety.AppObjects.AAlert;
 import com.example.herdsafety.AppObjects.AlertFactory;
-import com.example.herdsafety.AppObjects.CautionAlert;
 
 public class AlertFormPage extends AppCompatActivity {
 
@@ -85,6 +83,7 @@ public class AlertFormPage extends AppCompatActivity {
             }
         });
     }
+
 
     public void gotoMainPage(){
         Intent intent = new Intent(this, MapsActivity.class);
