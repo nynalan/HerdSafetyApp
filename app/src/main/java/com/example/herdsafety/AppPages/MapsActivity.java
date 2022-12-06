@@ -25,11 +25,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -166,7 +161,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng test = new LatLng(40.012197, -105.263686);
         mMap.addMarker(new MarkerOptions().position(test).title("Marker #1"));
 
-        double border = 1;
+        double border = 0.01;
 
         LatLng one = new LatLng(cuBoulder.latitude - border, cuBoulder.longitude - border);
         LatLng two = new LatLng(cuBoulder.latitude + border, cuBoulder.longitude + border);
