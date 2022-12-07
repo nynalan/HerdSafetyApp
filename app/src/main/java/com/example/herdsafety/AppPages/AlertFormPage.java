@@ -69,22 +69,11 @@ public class AlertFormPage extends AppCompatActivity {
             }
         });
 
-        /*
-        testButton = (Button) findViewById(R.id.buttonTest);
-        testButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    getDeviceLocation();
-                } else {
-                    showAlertMessageLocationDisabled();
-                }
-            }
-        });
-        */
-
         buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                showAlertMessageLocationDisabled();
+
                 // Pulling user input for alert description.
                 String alertDescription = alertDescriptionWidget.getText().toString();
                 Button alertLevelButton = (Button) findViewById(alertTypeWidget.getCheckedRadioButtonId());
@@ -106,17 +95,8 @@ public class AlertFormPage extends AppCompatActivity {
                         String alertLevel = alertLevelButton.getText().toString();
 
                         // Checking that location permission was given.
-                        // if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         LatLng location = getDeviceLocation();
-                        // } else {
-                            // If not, display message. Null-pointer exception in next statement will be caught.
-                            // showAlertMessageLocationDisabled();
-                        // }
-                        Log.d("location", "AlertFormPage location read: " + location);
                         AAlert newAlert = AlertFactory.singletonFactory.createAlert(alertDescription, location, alertLevel);
-                        // Log.d("location_test", "newAlert returned: " + newAlert);
-                        // Log.d("location_test", "newAlert latitude: " + newAlert.getLatitude());
-                        // Log.d("location_test", "newAlert longitude: " + newAlert.getLongitude());
                         boolean success = dbHandler.addNewAlert(newAlert);
 
                         // Test pop-up to verify insertion works correctly.
@@ -132,11 +112,17 @@ public class AlertFormPage extends AppCompatActivity {
 
                         // Proceeding if all works correctly.
                         gotoVerifyPage(bestMatchId, alertDescription, null, newAlert.getType());
+                        // Log.d("location_test", "newAlert returned: " + newAlert);
+                        // Log.d("location_test", "newAlert latitude: " + newAlert.getLatitude());
+                        // Log.d("location_test", "newAlert longitude: " + newAlert.getLongitude());
                     }
                     catch (Exception e) {
+                        // If location permissions are not granted, ask for them.
+                        showAlertMessageLocationDisabled();
+
                         // Display error message if not working correctly.
                         Log.d("database_insert", "Error: " + e);
-                        Toast.makeText(AlertFormPage.this, "Oh no! An error occurred reporting the alert!", Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(AlertFormPage.this, "Oh no! An error occurred reporting the alert!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -186,18 +172,7 @@ public class AlertFormPage extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Device location is turned off. Do you want to turn location on?");
         builder.setCancelable(false);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
+        builder.setNegativeButton("Yes", (dialogInterface, i) -> dialogInterface.cancel());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
