@@ -26,10 +26,10 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="299dp"
         android:layout_height="186dp"
-        android:layout_below="@id/textViewAlert"
+        android:layout_below="@id/textViewDescription"
         android:layout_centerInParent="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="81dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/dotted_border"
         android:textColor="@color/grey"
         android:textSize="18sp"
@@ -54,7 +54,7 @@
         android:layout_below="@id/textViewAlert"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="10dp"
         android:text="Description"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/editTextTextMultiLine"
         android:layout_centerVertical="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:text="Type"
         android:textSize="24sp"
@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewType"
         android:layout_centerInParent="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -104,6 +104,30 @@
             android:layout_weight="12"
             android:text="Caution" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/textViewLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/radioGroup_alertLevel"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="Location"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <fragment
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/textViewLocation"
+        map:cardElevation="12dp"
+        tools:context=".AppPages.AlertDetailsPage" />
 
 
 </RelativeLayout>

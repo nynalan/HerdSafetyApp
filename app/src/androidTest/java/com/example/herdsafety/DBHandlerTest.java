@@ -16,6 +16,8 @@ import static org.junit.Assert.*;
 import com.example.herdsafety.Database.DBHandler;
 import com.example.herdsafety.MainAlertObjects.AAlert;
 import com.example.herdsafety.MainAlertObjects.CautionAlert;
+import com.example.herdsafety.MainAlertObjects.CrimeAlert;
+import com.example.herdsafety.MainAlertObjects.WarningAlert;
 
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class DBHandlerTest {
     @Test
     //Test to see if an alert can be added to the database
     public void TestDBHandlerInsert(){
-        CautionAlert cautionAlert = new CautionAlert(0,"Testing Alert");
+        CautionAlert cautionAlert = new CautionAlert(0, "Testing Alert",(float)40.00895,(float)-105.26798);
         dbHandler.addNewAlert(cautionAlert);
         List<AAlert> testingAlertList = dbHandler.retrieveNearbyAlerts();
         Boolean testSuccess = false;

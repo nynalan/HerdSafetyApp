@@ -144,9 +144,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap = googleMap;
 
-        LatLng cuBoulder = new LatLng(40.00894024526554, -105.2679755325988);
-        mMap.addMarker(new MarkerOptions().position(cuBoulder).title("CU Boulder"));
-
         // Creating marker for each set of coordinates.
         Log.d("location_test", "Coordinates: " + coordinates);
         for (int i = 0; i < coordinates.size(); i++) {
@@ -158,22 +155,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.addMarker(new MarkerOptions().position(coords).title(descriptions.get(i)));
         }
 
-        // Test alert!
-        LatLng test = new LatLng(40.012197, -105.263686);
-        mMap.addMarker(new MarkerOptions().position(test).title("Marker #1"));
+        // Focuses the map according to the coordinates of America
+        LatLng one = new LatLng(35,-120);
+        LatLng two = new LatLng( 45,-100);
 
-        double border = 0.01;
-
-        // LatLng one = new LatLng(cuBoulder.latitude - border, cuBoulder.longitude - border);
-        // LatLng two = new LatLng(cuBoulder.latitude + border, cuBoulder.longitude + border);
-
-        // LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         // add them to builder
-        // builder.include(one);
-        // builder.include(two);
+        builder.include(one);
+        builder.include(two);
 
-        // LatLngBounds bounds = builder.build();
+        LatLngBounds bounds = builder.build();
 
         //get width and height to current display screen
         int width = getResources().getDisplayMetrics().widthPixels;
@@ -183,10 +175,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int padding = (int) (width * 0.20);
 
         //set latlong bounds
-        // mMap.setLatLngBoundsForCameraTarget(bounds);
+        mMap.setLatLngBoundsForCameraTarget(bounds);
 
         //move camera to fill the bound to screen
-        // mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
 
         //set zoom to level to current so that you won't be able to zoom out viz. move outside bounds
         mMap.setMinZoomPreference(mMap.getCameraPosition().zoom);
