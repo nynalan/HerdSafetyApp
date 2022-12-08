@@ -38,7 +38,6 @@ public class AlertFormPage extends AppCompatActivity {
 
     private Button buttonCancel;
     private Button buttonSubmit;
-    // private Button testButton;
 
     // Declaring LatLng to store device location (if proper permissions given).
     // FusedLocationProviderClient to pull location data.
@@ -97,10 +96,6 @@ public class AlertFormPage extends AppCompatActivity {
                         // Checking that location permission was given.
                         LatLng location = getDeviceLocation();
                         AAlert newAlert = AlertFactory.singletonFactory.createAlert(alertDescription, location, alertLevel);
-                        boolean success = dbHandler.addNewAlert(newAlert);
-
-                        // Test pop-up to verify insertion works correctly.
-                        Toast.makeText(AlertFormPage.this, "Successfully added? " + success, Toast.LENGTH_SHORT).show();
 
                         Hashtable<Integer, String> hashtableAlert = new Hashtable<>();
                         for(AAlert alert: AAlert.alertList){
@@ -108,13 +103,15 @@ public class AlertFormPage extends AppCompatActivity {
                                 hashtableAlert.put(alert.getId(), alert.getDescription());
                             }
                         }
+
+                        // Strategy pattern: The sim_algorithm is different based on the type of alert
+                        // and the sim_algorithms similarPostID method is overridden based on the sim_algorithm type
                         int bestMatchId = newAlert.sim_algorithm.similarPostId(newAlert.getDescription(), hashtableAlert);
 
+
                         // Proceeding if all works correctly.
-                        gotoVerifyPage(bestMatchId, alertDescription, null, newAlert.getType());
-                        // Log.d("location_test", "newAlert returned: " + newAlert);
-                        // Log.d("location_test", "newAlert latitude: " + newAlert.getLatitude());
-                        // Log.d("location_test", "newAlert longitude: " + newAlert.getLongitude());
+                        gotoVerifyPage(bestMatchId, alertDescription, location, newAlert.getType());
+
                     }
                     catch (Exception e) {
                         // If location permissions are not granted, ask for them.
@@ -122,7 +119,6 @@ public class AlertFormPage extends AppCompatActivity {
 
                         // Display error message if not working correctly.
                         Log.d("database_insert", "Error: " + e);
-                        // Toast.makeText(AlertFormPage.this, "Oh no! An error occurred reporting the alert!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -139,7 +135,7 @@ public class AlertFormPage extends AppCompatActivity {
         Intent intent = new Intent(this, AlertVerifyPage.class);
         intent.putExtra("Alert id", id);
         intent.putExtra("Alert Description", alertDescription);
-        //intent.putExtra("Alert LatLng", latLng);
+        intent.putExtra("Alert LatLng", latLng);
         intent.putExtra("Alert Type", type);
         startActivity(intent);
     }
@@ -147,7 +143,6 @@ public class AlertFormPage extends AppCompatActivity {
     // Get device's current location.
     @SuppressLint("MissingPermission")
     private LatLng getDeviceLocation() {
-        // Log.d("Location", String.valueOf(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED));
 
         // If permissions are given, pull current device location with cancellation token.
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

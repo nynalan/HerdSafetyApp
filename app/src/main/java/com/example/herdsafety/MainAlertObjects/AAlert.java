@@ -9,6 +9,7 @@ import java.util.List;
 public abstract class AAlert {
     public static List<AAlert> alertList;
 
+    //Strategy pattern
     public SimilarityStrategy sim_algorithm;
     
     private int id;
@@ -122,10 +123,4 @@ public abstract class AAlert {
     
     public void setLastUpdated(String last_updated) { this.last_updated = last_updated; }
 
-    /**
-     * Gets the formatted displace, deploys strategy pattern
-     * TODO: should this be a different type than string, like a listViewObject?
-     * @return String
-     */
-    public abstract String getFormattedDisplay();
 }

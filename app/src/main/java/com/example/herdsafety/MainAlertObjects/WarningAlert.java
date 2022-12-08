@@ -11,8 +11,4 @@ public class WarningAlert extends AAlert{
         sim_algorithm = new WarningSimilarity();
     }
 
-    @Override
-    public String getFormattedDisplay() {
-        return null;
-    }
 }

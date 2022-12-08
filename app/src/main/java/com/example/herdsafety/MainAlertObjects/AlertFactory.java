@@ -4,9 +4,10 @@ package com.example.herdsafety.MainAlertObjects;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-
+// Factory Pattern
 public class AlertFactory {
 
+    // Singleton pattern, that is made with eager instantiation
     public static AlertFactory singletonFactory = new AlertFactory();
 
     public AAlert createAlert(String description, LatLng location, String type) {
@@ -16,10 +17,6 @@ public class AlertFactory {
                 newAlertId = alert.getId() + 1;
             }
         }
-
-        // Log.d("location_test", "LatLng object: " + location);
-        // Log.d("location_test", "Latitude: " + location.latitude);
-        // Log.d("location_test", "Latitude: " + location.longitude);
 
         if (type.equals("Caution")) {
             return new CautionAlert(newAlertId, description, (float) location.latitude, (float) location.longitude);

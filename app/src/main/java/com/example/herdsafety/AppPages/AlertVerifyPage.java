@@ -14,6 +14,7 @@ import com.example.herdsafety.Database.DBHandler;
 import com.example.herdsafety.MainAlertObjects.AAlert;
 import com.example.herdsafety.MainAlertObjects.AlertFactory;
 import com.example.herdsafety.R;
+import com.google.android.gms.maps.model.LatLng;
 
 public class AlertVerifyPage extends AppCompatActivity {
 
@@ -25,6 +26,7 @@ public class AlertVerifyPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alert_verify_page);
 
+        //Lazy instantiation
         DBHandler dbHandler = new DBHandler(this);
 
         //If verified, new alert is not added instead the verified alert is kept in the database
@@ -43,7 +45,7 @@ public class AlertVerifyPage extends AppCompatActivity {
                 gotoReportConfirmationPage();
                 AAlert alertPassed = AlertFactory.singletonFactory.createAlert(
                         getIntent().getExtras().getString("Alert Description"),
-                        null,
+                        getIntent().getExtras().getParcelable("Alert LatLng"),
                         getIntent().getExtras().getString("Alert Type"));
                 boolean success = dbHandler.addNewAlert(alertPassed);
 

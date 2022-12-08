@@ -11,8 +11,4 @@ public class CrimeAlert extends AAlert {
         sim_algorithm = new CrimeSimilarity();
     }
 
-    @Override
-    public String getFormattedDisplay() {
-        return null;
-    }
 }

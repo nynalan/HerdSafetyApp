@@ -38,7 +38,7 @@ public class SimilarityTest {
 
     @Test public void crime_sim_correct() {
             System.out.println("Actual " + CrimeSimilarityCheck());
-            Assert.assertEquals(0.9,CrimeSimilarityCheck(), 0.05);
+            Assert.assertEquals(0.9,CrimeSimilarityCheck(), 0.1);
     }
 
     @Test

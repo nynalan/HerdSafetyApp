@@ -6,6 +6,8 @@ import com.example.herdsafety.MainAlertObjects.AAlert;
 import java.util.ArrayList;
 
 interface DBHandlerInterface {
+    //Data object access pattern, covers both the interface and the corresponding file (DBHandler.java)
+
     void onCreate(SQLiteDatabase db);
     void addNewUser(String username, String email, String password);  // Placeholder. Will be refactored.
     boolean addNewAlert(AAlert alert);

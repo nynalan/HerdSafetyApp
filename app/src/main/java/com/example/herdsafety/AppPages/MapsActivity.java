@@ -54,7 +54,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ActivityMapsBinding binding;
     private Button buttonReport;
     ListView aPlaceHolder;
-    String[] monthsPlaceHolder;
     public ArrayList<LatLng> coordinates = new ArrayList<>();
     public ArrayList<String> descriptions = new ArrayList<>();
 
@@ -86,8 +85,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         dbHandler = new DBHandler(MapsActivity.this);
 
-        // dbHandler.deleteAllAlerts();
-
         // Remove default title text
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         // Get access to the custom title view
@@ -99,6 +96,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
+        // Command pattern, available on all clickable objects
         buttonReport = (Button) findViewById(R.id.buttonReport);
         buttonReport.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -113,7 +111,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d("location", String.valueOf(AAlert.alertList.get(i).getLatitude()));
             coordinates.add(new LatLng(AAlert.alertList.get(i).getLatitude(), AAlert.alertList.get(i).getLongitude()));
         }
-        // Log.d("marker", "Locations: " + coordinates);
 
         // Getting names.
         for (int i = 0; i < AAlert.alertList.size(); i++) {

@@ -11,7 +11,6 @@ public class CautionAlert extends AAlert {
         sim_algorithm = new CautionSimilarity();
     }
 
-    @Override
     public String getFormattedDisplay() {
         return null;
     }

@@ -76,7 +76,6 @@ public class DBHandler extends SQLiteOpenHelper implements DBHandlerInterface {
         db.execSQL(alert_query);
     }
 
-    // WILL NEED TO REFACTOR TO INCORPORATE AALERT CLASS.
     // Adding new user to SQLite database.
     @Override
     public void addNewUser(String username, String email, String password) {
